@@ -25,7 +25,7 @@ public class Worker : BackgroundService
         foreach (var k in keys)
         {
             var value = Environment.GetEnvironmentVariable(k?.ToString());
-            _logger.LogInformation($"[{k?.ToString()}] Value:[{value}]");
+            Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
         }
         // MessageBody messageCard = new MessageBody()
         // {
