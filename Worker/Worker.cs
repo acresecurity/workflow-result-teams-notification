@@ -20,7 +20,13 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation(JsonConvert.SerializeObject(Environment.GetEnvironmentVariables()));
+        var variables = Environment.GetEnvironmentVariables();
+        var keys = Environment.GetEnvironmentVariables().Keys;
+        foreach (var k in keys)
+        {
+            var value = Environment.GetEnvironmentVariable(k?.ToString());
+            _logger.LogInformation($"[{k?.ToString()}] Value:[{value}]");
+        }
         // MessageBody messageCard = new MessageBody()
         // {
         //     Title = "Feenics WatchDog Alert",
