@@ -10,4 +10,4 @@ COPY --from=build-env /app/$PROJECT_NAME/out .
 ENV PROJECT_NAME="Worker"
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["dotnet", "WatchDogTest-BasicEventPublish.dll"]
+ENTRYPOINT ["dotnet", "Worker.dll"]
