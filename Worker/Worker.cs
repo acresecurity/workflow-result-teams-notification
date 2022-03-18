@@ -53,5 +53,6 @@ public class Worker : BackgroundService
         // {
         //     _logger.LogError(e, "Failed to send failure notification");
         // }
+        _applicationLifetime.StopApplication();
     }
 }
