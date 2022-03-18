@@ -11,4 +11,4 @@ RUN ls
 RUN ls /
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["dotnet", "/Worker.dll"]
