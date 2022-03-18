@@ -1,0 +1,33 @@
+name: 'Send Teams Notification'
+
+description: 'Send a notfication to MS Teams indicating the result of the Github Action Workflow'
+
+inputs:
+  title:
+    required: false
+  description:
+    required: false
+  workflow:
+    required: false
+  repository:
+    required: false
+  webhook:
+    required: false
+  job:
+    required: false
+  steps:
+    required: false
+  needs:
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.title }}
+    - ${{ inputs.description }}
+    - ${{ inputs.workflow }}
+    - ${{ inputs.repository }}
+    - ${{ inputs.webhook }}
+    - ${{ inputs.job }}
+    - ${{ inputs.steps }}
+    - ${{ inputs.needs }}
