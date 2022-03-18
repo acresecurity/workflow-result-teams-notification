@@ -3,7 +3,7 @@ WORKDIR /app
 COPY Worker ./Worker
 RUN dotnet publish Worker -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
 RUN ls
