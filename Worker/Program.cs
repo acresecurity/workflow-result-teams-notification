@@ -7,7 +7,11 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Console.WriteLine(JsonConvert.SerializeObject(args));
+        Console.WriteLine("ARGS----------------------------------------------------------------");
+        foreach (var a in args)
+        {
+            Console.WriteLine($"[{a}]");
+        }
         CreateHostBuilder(args).Build().Run();
     }
 

@@ -22,6 +22,8 @@ public class Worker : BackgroundService
     {
         var variables = Environment.GetEnvironmentVariables();
         var keys = Environment.GetEnvironmentVariables().Keys;
+        Console.WriteLine("ENV-----------------------------------------------------------------");
+
         foreach (var k in keys)
         {
             var value = Environment.GetEnvironmentVariable(k?.ToString());
