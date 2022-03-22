@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Worker;
 
@@ -20,15 +21,99 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        string compareLink = "";
+        List<Commit> commits = new List<Commit>();
+        string repositoryLink = "";
+
+
         var variables = Environment.GetEnvironmentVariables();
         var keys = Environment.GetEnvironmentVariables().Keys;
-        Console.WriteLine("ENV-----------------------------------------------------------------");
+        // Console.WriteLine("ENV-----------------------------------------------------------------");
 
-        foreach (var k in keys)
+        // foreach (var k in keys)
+        // {
+        //     var value = Environment.GetEnvironmentVariable(k?.ToString());
+        //     Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
+        // }
+
+        // Console.WriteLine("END-----------------------------------------------------------------");
+
+        var workflow = Environment.GetEnvironmentVariable("INPUT_WORKFLOW") ?? "";
+        if (!string.IsNullOrWhiteSpace(workflow))
         {
-            var value = Environment.GetEnvironmentVariable(k?.ToString());
-            Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
+            var workflowObj = JObject.Parse(workflow);
+            var compare = workflowObj?["compare"]?.ToString();
+            if (compare != null)
+            {
+                compareLink = compare;
+            }
+
+            var e = workflowObj?["event"];
+            if (e != null)
+            {
+                var c = e?["commits"];
+                var commitsArr = c as JArray;
+                if (commitsArr != null && commitsArr.Count > 0)
+                {
+                    foreach (var v in commitsArr)
+                    {
+                        var author = v["author"]?["username"]?.ToString();
+                        var msg = v["message"]?.ToString();
+                        var url = v["url"]?.ToString();
+                        commits.Add(new Commit()
+                        {
+                            Author = author ?? "",
+                            Message = msg ?? "",
+                            UrlLink = url ?? ""
+                        });
+                    }
+                }
+
+                var repoLink = e?["repository"]?["url"] ?? "";
+                if (repoLink != null && !string.IsNullOrWhiteSpace(repoLink.ToString()))
+                {
+                    repositoryLink = repoLink.ToString();
+                }
+            }
+
+
         }
+        var TITLE = Environment.GetEnvironmentVariable("INPUT_TITLE") ?? "";
+        var DESCRIPTION = Environment.GetEnvironmentVariable("INPUT_DESCRIPTION") ?? "";
+        var REPOSITORY_NAME = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY") ?? "";
+        var WORKFLOW_NAME = Environment.GetEnvironmentVariable("GITHUB_WORKFLOW") ?? "";
+        var STEPS = Environment.GetEnvironmentVariable("INPUT_STEPS") ?? "";
+        var JOB = Environment.GetEnvironmentVariable("INPUT_JOB") ?? "";
+        var NEEDS = Environment.GetEnvironmentVariable("INPUT_NEEDS") ?? "";
+        var GITHUB_EVENT = Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") ?? "";
+        if (string.IsNullOrWhiteSpace(repositoryLink))
+        {
+            repositoryLink = $"https://github.com/{REPOSITORY_NAME}";
+        }
+
+        Console.WriteLine($"[compareLink] Value:[{compareLink}]");
+        Console.WriteLine($"[repositoryLink] Value:[{repositoryLink}]");
+
+        Console.WriteLine($"[commits] Value:[{JsonConvert.SerializeObject(commits)}]");
+        Console.WriteLine($"[TITLE] Value:[{TITLE}]");
+        Console.WriteLine($"[DESCRIPTION] Value:[{DESCRIPTION}]");
+        Console.WriteLine($"[REPOSITORY_NAME] Value:[{REPOSITORY_NAME}]");
+        Console.WriteLine($"[WORKFLOW_NAME] Value:[{WORKFLOW_NAME}]");
+        Console.WriteLine($"[GITHUB_EVENT] Value:[{GITHUB_EVENT}]");
+
+        Console.WriteLine($"[STEPS] Value:[{STEPS}]");
+        Console.WriteLine($"[JOB] Value:[{JOB}]");
+
+        Console.WriteLine($"[NEEDS] Value:[{NEEDS}]");
+
+
+
+
+
+
+
+
+
         // MessageBody messageCard = new MessageBody()
         // {
         //     Title = "Feenics WatchDog Alert",

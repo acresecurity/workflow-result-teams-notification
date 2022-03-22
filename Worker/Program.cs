@@ -7,11 +7,11 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Console.WriteLine("ARGS----------------------------------------------------------------");
-        foreach (var a in args)
-        {
-            Console.WriteLine($"[{a}]");
-        }
+        // Console.WriteLine("ARGS----------------------------------------------------------------");
+        // foreach (var a in args)
+        // {
+        //     Console.WriteLine($"[{a}]");
+        // }
         CreateHostBuilder(args).Build().Run();
     }
 
