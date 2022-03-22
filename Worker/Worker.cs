@@ -28,15 +28,15 @@ public class Worker : BackgroundService
 
         var variables = Environment.GetEnvironmentVariables();
         var keys = Environment.GetEnvironmentVariables().Keys;
-        // Console.WriteLine("ENV-----------------------------------------------------------------");
+        Console.WriteLine("ENV-----------------------------------------------------------------");
 
-        // foreach (var k in keys)
-        // {
-        //     var value = Environment.GetEnvironmentVariable(k?.ToString());
-        //     Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
-        // }
+        foreach (var k in keys)
+        {
+            var value = Environment.GetEnvironmentVariable(k?.ToString());
+            Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
+        }
 
-        // Console.WriteLine("END-----------------------------------------------------------------");
+        Console.WriteLine("END-----------------------------------------------------------------");
 
         var workflow = Environment.GetEnvironmentVariable("INPUT_WORKFLOW") ?? "";
         if (!string.IsNullOrWhiteSpace(workflow))
