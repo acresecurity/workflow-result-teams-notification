@@ -86,10 +86,15 @@ public class Worker : BackgroundService
         var JOB = Environment.GetEnvironmentVariable("INPUT_JOB") ?? "";
         var NEEDS = Environment.GetEnvironmentVariable("INPUT_NEEDS") ?? "";
         var GITHUB_EVENT = Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") ?? "";
+        var BRANCH_NAME = Environment.GetEnvironmentVariable("GITHUB_REF_NAME") ?? "";
+
+
         if (string.IsNullOrWhiteSpace(repositoryLink))
         {
             repositoryLink = $"https://github.com/{REPOSITORY_NAME}";
         }
+
+        Console.WriteLine($"[BRANCH_NAME] Value:[{BRANCH_NAME}]");
 
         Console.WriteLine($"[compareLink] Value:[{compareLink}]");
         Console.WriteLine($"[repositoryLink] Value:[{repositoryLink}]");
