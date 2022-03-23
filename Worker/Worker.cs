@@ -113,7 +113,7 @@ public class Worker : BackgroundService
         if (commits != null && commits.Count > 0)
         {
             formattedDesc = formattedDesc + "  \n  " + "**Commits:**";
-            int MAX_COMMITS = 2;
+            int MAX_COMMITS = 4;
             for (int i = 0; i < MAX_COMMITS && i < commits.Count; i++)
             {
                 var currentCommit = commits[i];
