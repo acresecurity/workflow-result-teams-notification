@@ -1,10 +1,7 @@
 using Worker.Models;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 
 namespace Worker;
 
@@ -111,25 +108,17 @@ public class Worker : BackgroundService
 
         Console.WriteLine($"[NEEDS] Value:[{NEEDS}]");
 
-
-
-
-
-
-
-
-
         // MessageBody messageCard = new MessageBody()
         // {
-        //     Title = "Feenics WatchDog Alert",
-        //     Text = $"[] Notification",
+        //     Title = !string.IsNullOrWhiteSpace(TITLE) ? TITLE : $"[{REPOSITORY_NAME}] - [{WORKFLOW_NAME}]",
+        //     Text = DESCRIPTION,
         //     Sections = new List<MessageBody.Section>(){
         //                     new MessageBody.Section(){
         //                         Facts = new List<MessageBody.Fact>(){}
         //                     }
         //                 },
         //     Actions = new List<MessageBody.Action>(){
-        //                     new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=""}}},
+        //                     new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=repositoryLink}}},
         //                     new MessageBody.Action(){DisplayName= "Compare", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=""}}},
         //                     new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=""}}}
         //                 }
@@ -152,5 +141,6 @@ public class Worker : BackgroundService
         //     _logger.LogError(e, "Failed to send failure notification");
         // }
         _applicationLifetime.StopApplication();
+
     }
 }

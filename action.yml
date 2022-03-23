@@ -19,6 +19,8 @@ inputs:
     required: false
   needs:
     required: false
+  githubRunId:
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -31,3 +33,4 @@ runs:
     - ${{ inputs.job }}
     - ${{ inputs.steps }}
     - ${{ inputs.needs }}
+    - ${{ inputs.githubRunId }}
