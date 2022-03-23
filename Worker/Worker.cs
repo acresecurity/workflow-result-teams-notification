@@ -84,7 +84,8 @@ public class Worker : BackgroundService
         var NEEDS = Environment.GetEnvironmentVariable("INPUT_NEEDS") ?? "";
         var GITHUB_EVENT = Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") ?? "";
         var BRANCH_NAME = Environment.GetEnvironmentVariable("GITHUB_REF_NAME") ?? "";
-
+        var GITHUB_RUN_ID = Environment.GetEnvironmentVariable("GITHUB_RUN_ID") ?? "";
+        var INPUT_WEBHOOK = Environment.GetEnvironmentVariable("INPUT_WEBHOOK") ?? "";
 
         if (string.IsNullOrWhiteSpace(repositoryLink))
         {
@@ -108,38 +109,38 @@ public class Worker : BackgroundService
 
         Console.WriteLine($"[NEEDS] Value:[{NEEDS}]");
 
-        // MessageBody messageCard = new MessageBody()
-        // {
-        //     Title = !string.IsNullOrWhiteSpace(TITLE) ? TITLE : $"[{REPOSITORY_NAME}] - [{WORKFLOW_NAME}]",
-        //     Text = DESCRIPTION,
-        //     Sections = new List<MessageBody.Section>(){
-        //                     new MessageBody.Section(){
-        //                         Facts = new List<MessageBody.Fact>(){}
-        //                     }
-        //                 },
-        //     Actions = new List<MessageBody.Action>(){
-        //                     new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=repositoryLink}}},
-        //                     new MessageBody.Action(){DisplayName= "Compare", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=""}}},
-        //                     new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=""}}}
-        //                 }
-        // };
+        MessageBody messageCard = new MessageBody()
+        {
+            Title = !string.IsNullOrWhiteSpace(TITLE) ? TITLE : $"[{REPOSITORY_NAME}] - [{WORKFLOW_NAME}]",
+            Text = DESCRIPTION,
+            Sections = new List<MessageBody.Section>(){
+                            new MessageBody.Section(){
+                                Facts = new List<MessageBody.Fact>(){}
+                            }
+                        },
+            Actions = new List<MessageBody.Action>(){
+                            new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=repositoryLink}}},
+                            new MessageBody.Action(){DisplayName= "Compare", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=compareLink}}},
+                            new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=$"{repositoryLink}/actions/{(!string.IsNullOrWhiteSpace(GITHUB_RUN_ID) ? $"runs/{GITHUB_RUN_ID}" : "")}"}}}
+                        }
+        };
 
-        // try
-        // {
-        //     var cardJson = JsonConvert.SerializeObject(messageCard);
-        //     _logger.LogDebug("Sending notification for test [{title}]. Full Card: [{details}]", messageCard.Title, cardJson);
-        //     HttpClient client = new HttpClient();
-        //     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        try
+        {
+            var cardJson = JsonConvert.SerializeObject(messageCard);
+            _logger.LogDebug("Sending notification for test [{title}]. Full Card: [{details}]", messageCard.Title, cardJson);
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        //     StringContent httpContent = new StringContent(cardJson, System.Text.Encoding.UTF8, "application/json");
+            StringContent httpContent = new StringContent(cardJson, System.Text.Encoding.UTF8, "application/json");
 
-        //     await client.PostAsync("", httpContent);
+            await client.PostAsync(INPUT_WEBHOOK, httpContent);
 
-        // }
-        // catch (Exception e)
-        // {
-        //     _logger.LogError(e, "Failed to send failure notification");
-        // }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to send failure notification");
+        }
         _applicationLifetime.StopApplication();
 
     }
