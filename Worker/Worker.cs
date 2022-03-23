@@ -109,17 +109,22 @@ public class Worker : BackgroundService
 
         Console.WriteLine($"[NEEDS] Value:[{NEEDS}]");
 
-        var formattedDesc = DESCRIPTION + "\n" + "**Commits:**";
-        int MAX_COMMITS = 10;
-        for (int i = 0; i < MAX_COMMITS && i < commits.Count; i++)
+        var formattedDesc = DESCRIPTION;
+        if (commits != null && commits.Count > 0)
         {
-            var currentCommit = commits[i];
-            formattedDesc = formattedDesc + "\n+ " + $"[{currentCommit.Author} - {currentCommit.Message}]({currentCommit.UrlLink})";
+            formattedDesc = formattedDesc + "\n  " + "**Commits:**";
+            int MAX_COMMITS = 10;
+            for (int i = 0; i < MAX_COMMITS && i < commits.Count; i++)
+            {
+                var currentCommit = commits[i];
+                formattedDesc = formattedDesc + "\n+ " + $"[{currentCommit.Author} - {currentCommit.Message}]({currentCommit.UrlLink})";
+            }
+            if (commits.Count > MAX_COMMITS)
+            {
+                formattedDesc = formattedDesc + "\n+ " + $"{(commits.Count - MAX_COMMITS)} more...";
+            }
         }
-        if (commits.Count > MAX_COMMITS)
-        {
-            formattedDesc = formattedDesc + "\n+ " + $"{(commits.Count - MAX_COMMITS)} more...";
-        }
+
 
 
         MessageBody messageCard = new MessageBody()
