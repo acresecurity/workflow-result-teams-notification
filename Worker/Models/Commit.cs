@@ -12,9 +12,9 @@ public class Commit
         }
         set
         {
-            if (!string.IsNullOrWhiteSpace(value) && value.StartsWith("Merge pull request #") && value.IndexOf("from") > 0)
+            if (!string.IsNullOrWhiteSpace(value) && value.StartsWith("Merge pull request #") && value.IndexOf("\n") > 0)
             {
-                _message = value.Substring(0, value.IndexOf("from"));
+                _message = value.Substring(0, value.IndexOf("\n"));
             }
             else
             {
