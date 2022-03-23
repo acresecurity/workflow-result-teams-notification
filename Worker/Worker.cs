@@ -91,6 +91,14 @@ public class Worker : BackgroundService
         {
             repositoryLink = $"https://github.com/{REPOSITORY_NAME}";
         }
+        var jobRunWasSuccessful = false;
+        if (!string.IsNullOrWhiteSpace(JOB))
+        {
+            var jobObj = JObject.Parse(JOB);
+            Console.WriteLine($"[JOBSTATUS] Value:[{jobObj["status"]}]");
+            jobRunWasSuccessful = ((jobObj["status"]?.ToString() ?? "") == "success");
+
+        }
 
         Console.WriteLine($"[BRANCH_NAME] Value:[{BRANCH_NAME}]");
 
@@ -113,7 +121,7 @@ public class Worker : BackgroundService
         if (commits != null && commits.Count > 0)
         {
             formattedDesc = formattedDesc + "  \n  " + "**Commits:**";
-            int MAX_COMMITS = 4;
+            int MAX_COMMITS = 10;
             for (int i = 0; i < MAX_COMMITS && i < commits.Count; i++)
             {
                 var currentCommit = commits[i];
@@ -131,9 +139,15 @@ public class Worker : BackgroundService
         {
             Title = !string.IsNullOrWhiteSpace(TITLE) ? TITLE : $"[{REPOSITORY_NAME}] - [{WORKFLOW_NAME}]",
             Text = formattedDesc,
+            ThemeColor = jobRunWasSuccessful ? CardColours.GOOD : CardColours.DANGER,
             Sections = new List<MessageBody.Section>(){
                             new MessageBody.Section(){
-                                Facts = new List<MessageBody.Fact>(){}
+                                Facts = new List<MessageBody.Fact>(){
+                                    new MessageBody.Fact(){Name="Result", Value=jobRunWasSuccessful ? "PASSED" : "FAILED"},
+                                    new MessageBody.Fact(){Name="Repository", Value=REPOSITORY_NAME},
+                                    new MessageBody.Fact(){Name="Branch", Value=BRANCH_NAME},
+                                    new MessageBody.Fact(){Name="Event", Value=GITHUB_EVENT},
+                                }
                             }
                         },
             Actions = new List<MessageBody.Action>(){
