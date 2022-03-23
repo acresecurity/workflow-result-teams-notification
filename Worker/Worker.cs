@@ -112,7 +112,7 @@ public class Worker : BackgroundService
         var formattedDesc = DESCRIPTION;
         if (commits != null && commits.Count > 0)
         {
-            formattedDesc = formattedDesc + "\n  " + "**Commits:**";
+            formattedDesc = formattedDesc + "  \n  " + "**Commits:**";
             int MAX_COMMITS = 10;
             for (int i = 0; i < MAX_COMMITS && i < commits.Count; i++)
             {
