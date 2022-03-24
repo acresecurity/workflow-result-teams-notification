@@ -100,19 +100,25 @@ public class Worker : BackgroundService
         string formattedSteps = null;
         if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS))
         {
-
-            var stepsDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(STEPS);
-            if (stepsDictionary != null && stepsDictionary.Keys.Count > 0)
+            var stepsObj = JObject.Parse(STEPS);
+            foreach (var o in stepsObj)
             {
-                formattedSteps = "";
-                foreach (var k in stepsDictionary.Keys)
-                {
-                    var currentVal = stepsDictionary[k];
-                    var parsedObj = JObject.Parse(currentVal);
-                    var value = parsedObj?["outcome"]?.ToString() ?? "";
-                    formattedSteps = formattedSteps + "  \n`" + k + "` - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
-                }
+                Console.WriteLine(o.Key);
+                Console.WriteLine(o.Value);
+
             }
+            // var stepsDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(STEPS);
+            // if (stepsDictionary != null && stepsDictionary.Keys.Count > 0)
+            // {
+            //     formattedSteps = "";
+            //     foreach (var k in stepsDictionary.Keys)
+            //     {
+            //         var currentVal = stepsDictionary[k];
+            //         var parsedObj = JObject.Parse(currentVal);
+            //         var value = parsedObj?["outcome"]?.ToString() ?? "";
+            //         formattedSteps = formattedSteps + "  \n`" + k + "` - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
+            //     }
+            // }
 
         }
 
