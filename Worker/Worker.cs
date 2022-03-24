@@ -101,9 +101,9 @@ public class Worker : BackgroundService
         if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS) && STEPS.Count() > 5)
         {
             var stepsObj = JObject.Parse(STEPS);
+            formattedSteps = "";
             foreach (var o in stepsObj)
             {
-                formattedSteps = "";
                 var value = o.Value?["outcome"]?.ToString() ?? "";
                 Console.WriteLine(value);
                 formattedSteps = formattedSteps + "  \n`" + o.Key + "` - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
