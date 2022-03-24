@@ -39,15 +39,15 @@ public class Worker : BackgroundService
         if (!string.IsNullOrWhiteSpace(workflow))
         {
             var workflowObj = JObject.Parse(workflow);
-            var compare = workflowObj?["compare"]?.ToString();
-            if (compare != null)
-            {
-                compareLink = compare;
-            }
 
             var e = workflowObj?["event"];
             if (e != null)
             {
+                var compare = e?["compare"]?.ToString();
+                if (compare != null)
+                {
+                    compareLink = compare;
+                }
                 var c = e?["commits"];
                 var commitsArr = c as JArray;
                 if (commitsArr != null && commitsArr.Count > 0)
