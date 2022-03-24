@@ -98,7 +98,7 @@ public class Worker : BackgroundService
             jobRunWasSuccessful = ((jobObj["status"]?.ToString() ?? "") == "success");
         }
         string formattedSteps = null;
-        if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS))
+        if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS) && STEPS.Count() > 5)
         {
             var stepsObj = JObject.Parse(STEPS);
             foreach (var o in stepsObj)
