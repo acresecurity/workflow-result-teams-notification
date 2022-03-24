@@ -106,7 +106,7 @@ public class Worker : BackgroundService
             {
                 var value = o.Value?["outcome"]?.ToString() ?? "";
                 Console.WriteLine(value);
-                formattedSteps = formattedSteps + "  \n`" + o.Key + "` - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
+                formattedSteps = formattedSteps + "  \n" + o.Key + " - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
             }
         }
 
