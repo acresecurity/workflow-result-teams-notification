@@ -22,18 +22,17 @@ public class Worker : BackgroundService
         List<Commit> commits = new List<Commit>();
         string repositoryLink = "";
 
-
         var variables = Environment.GetEnvironmentVariables();
         var keys = Environment.GetEnvironmentVariables().Keys;
-        Console.WriteLine("ENV-----------------------------------------------------------------");
+        // Console.WriteLine("ENV-----------------------------------------------------------------");
 
-        foreach (var k in keys)
-        {
-            var value = Environment.GetEnvironmentVariable(k?.ToString());
-            Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
-        }
+        // foreach (var k in keys)
+        // {
+        //     var value = Environment.GetEnvironmentVariable(k?.ToString());
+        //     Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
+        // }
 
-        Console.WriteLine("END-----------------------------------------------------------------");
+        // Console.WriteLine("END-----------------------------------------------------------------");
 
         var workflow = Environment.GetEnvironmentVariable("INPUT_WORKFLOW") ?? "";
         if (!string.IsNullOrWhiteSpace(workflow))
@@ -97,6 +96,23 @@ public class Worker : BackgroundService
             var jobObj = JObject.Parse(JOB);
             Console.WriteLine($"[JOBSTATUS] Value:[{jobObj["status"]}]");
             jobRunWasSuccessful = ((jobObj["status"]?.ToString() ?? "") == "success");
+        }
+        string formattedSteps = null;
+        if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS))
+        {
+
+            var stepsDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(STEPS);
+            if (stepsDictionary != null && stepsDictionary.Keys.Count > 0)
+            {
+                formattedSteps = "";
+                foreach (var k in stepsDictionary.Keys)
+                {
+                    var currentVal = stepsDictionary[k];
+                    var parsedObj = JObject.Parse(currentVal);
+                    var value = parsedObj?["outcome"]?.ToString() ?? "";
+                    formattedSteps = formattedSteps + "  \n`" + k + "` - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
+                }
+            }
 
         }
 
@@ -156,6 +172,14 @@ public class Worker : BackgroundService
                             new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=$"{repositoryLink}/actions/{(!string.IsNullOrWhiteSpace(GITHUB_RUN_ID) ? $"runs/{GITHUB_RUN_ID}" : "")}"}}}
                         }
         };
+        if (!string.IsNullOrWhiteSpace(formattedSteps))
+        {
+            messageCard.Sections[0].Facts.Add(new MessageBody.Fact()
+            {
+                Name = "Steps",
+                Value = formattedSteps
+            });
+        }
 
         try
         {
