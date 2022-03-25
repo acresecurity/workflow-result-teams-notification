@@ -71,7 +71,6 @@ Incase Of Internal Error - Basic Notification
                 webhook: ${{ secrets.PLAYGROUND_WEBHOOK }}
                 job: ${{ toJson(job) }}
                 steps: ${{ toJson(steps) }}
-                needs: ${{ toJson(needs) }}  
 
 
         -   name: Success Notification
@@ -96,4 +95,3 @@ Incase Of Internal Error - Basic Notification
                 webhook: ${{ secrets.PLAYGROUND_WEBHOOK }}
                 job: ${{ toJson(job) }}
                 steps: ${{ toJson(steps) }}
-                needs: ${{ toJson(needs) }}
