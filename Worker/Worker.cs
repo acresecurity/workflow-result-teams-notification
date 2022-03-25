@@ -40,6 +40,7 @@ public class Worker : BackgroundService
 
         try
         {
+            throw new Exception("On Purpose");
             if (!string.IsNullOrWhiteSpace(INPUT_WORKFLOW))
             {
                 var workflowObj = JObject.Parse(INPUT_WORKFLOW);
