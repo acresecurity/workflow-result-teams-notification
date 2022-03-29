@@ -38,7 +38,11 @@ public class Worker : BackgroundService
         var REPOSITORY_NAME = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY") ?? "";
         var WORKFLOW_NAME = Environment.GetEnvironmentVariable("GITHUB_WORKFLOW") ?? "";
         var GITHUB_EVENT = Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") ?? "";
-        var BRANCH_NAME = Environment.GetEnvironmentVariable("GITHUB_REF_NAME") ?? "";
+        var BRANCH_NAME = Environment.GetEnvironmentVariable("GITHUB_HEAD_REF") ?? "";
+        if (string.IsNullOrWhiteSpace(BRANCH_NAME))
+        {
+            BRANCH_NAME = Environment.GetEnvironmentVariable("GITHUB_REF_NAME") ?? "";
+        }
         var GITHUB_RUN_ID = Environment.GetEnvironmentVariable("GITHUB_RUN_ID") ?? "";
 
         var INPUT_WEBHOOK = Environment.GetEnvironmentVariable("INPUT_WEBHOOK") ?? "";
@@ -54,6 +58,11 @@ public class Worker : BackgroundService
             if (!string.IsNullOrWhiteSpace(INPUT_WORKFLOW))
             {
                 var workflowObj = JObject.Parse(INPUT_WORKFLOW);
+
+                if (string.IsNullOrWhiteSpace(BRANCH_NAME))
+                {
+                    BRANCH_NAME = workflowObj?["ref"]?.ToString() ?? "";
+                }
 
                 var e = workflowObj?["event"];
                 if (e != null)
