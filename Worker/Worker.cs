@@ -53,6 +53,9 @@ public class Worker : BackgroundService
         var JOB = Environment.GetEnvironmentVariable("INPUT_JOB") ?? "";
         var NEEDS = Environment.GetEnvironmentVariable("INPUT_NEEDS") ?? "";
 
+        var beforeCommit = "";
+        var afterCommit = "";
+
         try
         {
             if (!string.IsNullOrWhiteSpace(INPUT_WORKFLOW))
@@ -72,6 +75,11 @@ public class Worker : BackgroundService
                     {
                         compareLink = compare;
                     }
+                    else
+                    {
+                        beforeCommit = e?["before"]?.ToString() ?? "";
+                        afterCommit = e?["after"]?.ToString() ?? "";
+                    }
                     var c = e?["commits"];
                     var commitsArr = c as JArray;
                     if (commitsArr != null && commitsArr.Count > 0)
@@ -90,7 +98,7 @@ public class Worker : BackgroundService
                         }
                     }
 
-                    var repoLink = e?["repository"]?["url"] ?? "";
+                    var repoLink = e?["repository"]?["html_url"] ?? "";
                     if (repoLink != null && !string.IsNullOrWhiteSpace(repoLink.ToString()))
                     {
                         repositoryLink = repoLink.ToString();
@@ -102,6 +110,10 @@ public class Worker : BackgroundService
             if (string.IsNullOrWhiteSpace(repositoryLink))
             {
                 repositoryLink = $"https://github.com/{REPOSITORY_NAME}";
+            }
+            if (string.IsNullOrWhiteSpace(compareLink) && !string.IsNullOrWhiteSpace(beforeCommit) && !string.IsNullOrWhiteSpace(afterCommit))
+            {
+                compareLink = $"{repositoryLink}/compare/{beforeCommit}...{afterCommit}";
             }
             var jobRunWasSuccessful = false;
             if (!string.IsNullOrWhiteSpace(JOB))
