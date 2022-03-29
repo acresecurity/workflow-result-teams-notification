@@ -23,6 +23,17 @@ public class Worker : BackgroundService
         string repositoryLink = "";
         MessageBody messageCard = null;
 
+        var keys = Environment.GetEnvironmentVariables().Keys;
+        Console.WriteLine("ENV-----------------------------------------------------------------");
+
+        foreach (var k in keys)
+        {
+            var value = Environment.GetEnvironmentVariable(k?.ToString());
+            Console.WriteLine($"[{k?.ToString()}] Value:[{value}]");
+        }
+
+        Console.WriteLine("END-----------------------------------------------------------------");
+
 
         var REPOSITORY_NAME = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY") ?? "";
         var WORKFLOW_NAME = Environment.GetEnvironmentVariable("GITHUB_WORKFLOW") ?? "";
