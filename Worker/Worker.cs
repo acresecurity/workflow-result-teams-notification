@@ -82,7 +82,7 @@ public class Worker : BackgroundService
                         afterCommit = e?["after"]?.ToString() ?? "";
                     }
 
-                    prLink = e?["pull_request"]?["_links"]?["html"]?.ToString() ?? "";
+                    prLink = e?["pull_request"]?["_links"]?["html"]?["href"]?.ToString() ?? "";
 
                     var c = e?["commits"];
                     var commitsArr = c as JArray;
