@@ -21,6 +21,7 @@ public class Worker : BackgroundService
         string compareLink = "";
         List<Commit> commits = new List<Commit>();
         string repositoryLink = "";
+        string prLink = "";
         MessageBody messageCard = null;
 
         var keys = Environment.GetEnvironmentVariables().Keys;
@@ -80,6 +81,9 @@ public class Worker : BackgroundService
                         beforeCommit = e?["before"]?.ToString() ?? "";
                         afterCommit = e?["after"]?.ToString() ?? "";
                     }
+
+                    prLink = e?["pull_request"]?["_links"]?["html"]?.ToString() ?? "";
+
                     var c = e?["commits"];
                     var commitsArr = c as JArray;
                     if (commitsArr != null && commitsArr.Count > 0)
@@ -166,6 +170,7 @@ public class Worker : BackgroundService
                 Actions = new List<MessageBody.Action>(){
                             new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=repositoryLink}}},
                             new MessageBody.Action(){DisplayName= "Compare", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=compareLink}}},
+                            new MessageBody.Action(){DisplayName= "Pull Request", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=prLink}}},
                             new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=$"{repositoryLink}/actions/{(!string.IsNullOrWhiteSpace(GITHUB_RUN_ID) ? $"runs/{GITHUB_RUN_ID}" : "")}"}}}
                         }
             };
@@ -207,6 +212,7 @@ public class Worker : BackgroundService
                     Actions = new List<MessageBody.Action>(){
                             new MessageBody.Action(){DisplayName= "Repository", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=$"https://github.com/{REPOSITORY_NAME}"}}},
                             new MessageBody.Action(){DisplayName= "Compare", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=compareLink}}},
+                            new MessageBody.Action(){DisplayName= "Pull Request", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=prLink}}},
                             new MessageBody.Action(){DisplayName= "Workflow", Targets = new List<MessageBody.ActionTarget>(){ new MessageBody.ActionTarget() {UriLink=$"https://github.com/{REPOSITORY_NAME}/actions/{(!string.IsNullOrWhiteSpace(GITHUB_RUN_ID) ? $"runs/{GITHUB_RUN_ID}" : "")}"}}}
                         }
                 };
