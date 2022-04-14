@@ -132,7 +132,7 @@ public class Worker : BackgroundService
                 foreach (var o in stepsObj)
                 {
                     var value = o.Value?["outcome"]?.ToString() ?? "";
-                    formattedSteps = formattedSteps + "  \n" + o.Key + " - `" + $"{(value == "success" ? "pass" : "fail")}" + "`";
+                    formattedSteps = formattedSteps + "  \n" + o.Key + " - `" + value + "`";
                 }
             }
 
