@@ -22,6 +22,7 @@ public class Worker : BackgroundService
         List<Commit> commits = new List<Commit>();
         string repositoryLink = "";
         string prLink = "";
+        string prTitle = "";
         MessageBody messageCard = null;
 
         var keys = Environment.GetEnvironmentVariables().Keys;
@@ -83,6 +84,7 @@ public class Worker : BackgroundService
                     }
 
                     prLink = e?["pull_request"]?["_links"]?["html"]?["href"]?.ToString() ?? "";
+                    prTitle = e?["pull_request"]?["title"]?.ToString() ?? "";
 
                     var c = e?["commits"];
                     var commitsArr = c as JArray;
@@ -180,6 +182,14 @@ public class Worker : BackgroundService
                 {
                     Name = "Steps",
                     Value = formattedSteps
+                });
+            }
+            if (!string.IsNullOrWhiteSpace(prTitle))
+            {
+                messageCard.Sections[0].Facts.Add(new MessageBody.Fact()
+                {
+                    Name = "PR",
+                    Value = prTitle
                 });
             }
         }
