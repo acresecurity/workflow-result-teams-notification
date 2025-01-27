@@ -127,6 +127,11 @@ public class Worker : BackgroundService
                 var jobObj = JObject.Parse(JOB);
                 jobRunWasSuccessful = ((jobObj["status"]?.ToString() ?? "") == "success");
             }
+            if (jobRunWasSuccessful && !string.IsNullOrWhiteSpace(NEEDS))
+            {
+                // var needsObj = JObject.Parse(NEEDS);
+                jobRunWasSuccessful = !NEEDS.Contains("failure") && !NEEDS.Contains("cancelled");
+            }
             string formattedSteps = "";
             if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS) && STEPS.Count() > 5)
             {
