@@ -129,7 +129,7 @@ public class Worker : BackgroundService
             }
             if (jobRunWasSuccessful && !string.IsNullOrWhiteSpace(NEEDS))
             {
-                var needsObj = JObject.Parse(NEEDS);
+                // var needsObj = JObject.Parse(NEEDS);
                 jobRunWasSuccessful = !NEEDS.Contains("failure") && !NEEDS.Contains("cancelled");
             }
             string formattedSteps = "";
