@@ -130,7 +130,7 @@ public class Worker : BackgroundService
             if (jobRunWasSuccessful && !string.IsNullOrWhiteSpace(NEEDS))
             {
                 var needsObj = JObject.Parse(NEEDS);
-                jobRunWasSuccessful = !NEEDS.contains("failure") && !NEEDS.contains("cancelled");
+                jobRunWasSuccessful = !NEEDS.Contains("failure") && !NEEDS.Contains("cancelled");
             }
             string formattedSteps = "";
             if (!jobRunWasSuccessful && !string.IsNullOrWhiteSpace(STEPS) && STEPS.Count() > 5)
