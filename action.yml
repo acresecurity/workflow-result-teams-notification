@@ -4,18 +4,25 @@ description: 'Send a notfication to MS Teams indicating the result of the Github
 
 inputs:
   description:
+    description: "Description field of the notification"
     required: true
   workflow:
+    description: "Workflow name"
     required: true
   webhook:
+    description: "Webhook URL"
     required: true
   job:
+    description: "Job data"
     required: true
   title_override:
+    description: "Override value for the title field"
     required: false
   steps:
+    description: "Step data"
     required: false
   needs:
+    description: "Job dependencies"
     required: false
 runs:
   using: 'docker'
